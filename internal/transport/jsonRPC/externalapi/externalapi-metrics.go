@@ -6,16 +6,16 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ARM-auto-place/auth/pkg/interfaces/externalAPI"
+	"github.com/ARM-auto-place/auth/pkg/interfaces/externalapi"
 	v2 "github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
 
 type metricsExternalAPI struct {
-	next externalAPI.ExternalAPI
+	next externalapi.ExternalAPI
 }
 
-func metricsMiddlewareExternalAPI(next externalAPI.ExternalAPI) externalAPI.ExternalAPI {
+func metricsMiddlewareExternalAPI(next externalapi.ExternalAPI) externalapi.ExternalAPI {
 	return &metricsExternalAPI{next: next}
 }
 

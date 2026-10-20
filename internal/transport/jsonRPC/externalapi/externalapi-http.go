@@ -2,7 +2,7 @@
 package externalapi
 
 import (
-	"github.com/ARM-auto-place/auth/pkg/interfaces/externalAPI"
+	"github.com/ARM-auto-place/auth/pkg/interfaces/externalapi"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,10 +11,10 @@ type httpExternalAPI struct {
 	maxBatchSize     int
 	maxParallelBatch int
 	svc              *serverExternalAPI
-	base             externalAPI.ExternalAPI
+	base             externalapi.ExternalAPI
 }
 
-func NewExternalAPI(svcExternalAPI externalAPI.ExternalAPI) (srv *httpExternalAPI) {
+func NewExternalAPI(svcExternalAPI externalapi.ExternalAPI) (srv *httpExternalAPI) {
 
 	srv = &httpExternalAPI{
 		base: svcExternalAPI,

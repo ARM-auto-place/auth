@@ -28,7 +28,7 @@ type ExternalAPI interface {
 	// @tg http-args=email|email
 	// @tg http-args=password|password
 	// @tg uuidPackage=github.com/google/uuid
-	// @tg http-response=github.com/ARM-auto-place/auth/auth/internal/transport/custom-handlers:GetPayments
+	// @tg http-response=github.com/ARM-auto-place/auth/internal/transport/custom_handlers:GetPayments
 	// @tg summary=`Регистрация пользователя`
 	// @tg desc=`Регистрация пользователя`
 	UserRegister(ctx context.Context, email string, password string) (userID uuid.UUID, err error)
@@ -38,7 +38,7 @@ type ExternalAPI interface {
 	// @tg http-cookies=userID|x-user-id
 	// @tg http-args=code|code
 	// @tg uuidPackage=github.com/google/uuid
-	// @tg http-response=github.com/ARM-auto-place/auth/auth/internal/transport/custom-handlers:CheckCode
+	// @tg http-response=github.com/ARM-auto-place/auth/internal/transport/custom_handlers:CheckCode
 	// @tg summary=`Проверка кода верефикации`
 	// @tg desc=`Проверка кода верефикации`
 	CheckCode(ctx context.Context, userID uuid.UUID, code string) (err error)

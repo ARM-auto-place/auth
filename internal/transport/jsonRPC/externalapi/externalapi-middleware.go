@@ -4,14 +4,14 @@ package externalapi
 import (
 	"context"
 
-	"github.com/ARM-auto-place/auth/pkg/interfaces/externalAPI"
+	"github.com/ARM-auto-place/auth/pkg/interfaces/externalapi"
 	"github.com/google/uuid"
 )
 
 type ExternalAPIUserRegister func(ctx context.Context, email string, password string) (userID uuid.UUID, err error)
 type ExternalAPICheckCode func(ctx context.Context, userID uuid.UUID, code string) (err error)
 
-type MiddlewareExternalAPI func(next externalAPI.ExternalAPI) externalAPI.ExternalAPI
+type MiddlewareExternalAPI func(next externalapi.ExternalAPI) externalapi.ExternalAPI
 
 type MiddlewareExternalAPIUserRegister func(next ExternalAPIUserRegister) ExternalAPIUserRegister
 type MiddlewareExternalAPICheckCode func(next ExternalAPICheckCode) ExternalAPICheckCode

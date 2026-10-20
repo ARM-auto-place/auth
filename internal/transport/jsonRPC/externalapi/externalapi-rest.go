@@ -4,7 +4,7 @@ package externalapi
 import (
 	"context"
 
-	customhandlers "github.com/ARM-auto-place/auth/auth/internal/transport/custom-handlers"
+	customhandlers "github.com/ARM-auto-place/auth/internal/transport/custom_handlers"
 	"github.com/gofiber/fiber/v2"
 	uuid "github.com/google/uuid"
 )

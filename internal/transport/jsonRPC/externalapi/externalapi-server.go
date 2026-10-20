@@ -4,12 +4,12 @@ package externalapi
 import (
 	"context"
 
-	"github.com/ARM-auto-place/auth/pkg/interfaces/externalAPI"
+	"github.com/ARM-auto-place/auth/pkg/interfaces/externalapi"
 	"github.com/google/uuid"
 )
 
 type serverExternalAPI struct {
-	svc          externalAPI.ExternalAPI
+	svc          externalapi.ExternalAPI
 	userRegister ExternalAPIUserRegister
 	checkCode    ExternalAPICheckCode
 }
@@ -23,7 +23,7 @@ type MiddlewareSetExternalAPI interface {
 	WithLog()
 }
 
-func newServerExternalAPI(svc externalAPI.ExternalAPI) *serverExternalAPI {
+func newServerExternalAPI(svc externalapi.ExternalAPI) *serverExternalAPI {
 	return &serverExternalAPI{
 		checkCode:    svc.CheckCode,
 		svc:          svc,

@@ -6,18 +6,18 @@ import (
 	"time"
 
 	"github.com/ARM-auto-place/auth/internal/transport/jsonRPC/externalapi/viewer"
-	"github.com/ARM-auto-place/auth/pkg/interfaces/externalAPI"
+	"github.com/ARM-auto-place/auth/pkg/interfaces/externalapi"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
 type loggerExternalAPI struct {
-	next externalAPI.ExternalAPI
+	next externalapi.ExternalAPI
 }
 
 func loggerMiddlewareExternalAPI() MiddlewareExternalAPI {
-	return func(next externalAPI.ExternalAPI) externalAPI.ExternalAPI {
+	return func(next externalapi.ExternalAPI) externalapi.ExternalAPI {
 		return &loggerExternalAPI{next: next}
 	}
 }

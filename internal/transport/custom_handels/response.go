@@ -1,4 +1,4 @@
-package response
+package customhandlers
 
 import (
 	"encoding/json"

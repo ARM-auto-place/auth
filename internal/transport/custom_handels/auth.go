@@ -1,7 +1,7 @@
-package response
+package customhandlers
 
 import (
-	interfaces "github.com/ARM-auto-place/auth/pkg/interfaces/externalAPI"
+	interfaces "github.com/ARM-auto-place/auth/pkg/interfaces/externalapi"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
