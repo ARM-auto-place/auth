@@ -16,11 +16,11 @@ import (
 // ExternalAPI
 // @tg http-server metrics log
 // @tg http-prefix=/api/auth
-// @tg 200=github.com/ARM-auto-place/auth/auth/swaggers/externalapi/models:Resp200
-// @tg 402=github.com/ARM-auto-place/auth/auth/swaggers/externalapi/models:Err402
-// @tg 403=github.com/ARM-auto-place/auth/auth/swaggers/externalapi/models:Err403
-// @tg 405=github.com/ARM-auto-place/auth/auth/swaggers/externalapi/models:Err405
-// @tg 500=github.com/ARM-auto-place/auth/auth/swaggers/externalapi/models:Err500
+// @tg 200=github.com/ARM-auto-place/auth/swaggers/externalapi/models:Resp200
+// @tg 402=github.com/ARM-auto-place/auth/swaggers/externalapi/models:Err402
+// @tg 403=github.com/ARM-auto-place/auth/swaggers/externalapi/models:Err403
+// @tg 405=github.com/ARM-auto-place/auth/swaggers/externalapi/models:Err405
+// @tg 500=github.com/ARM-auto-place/auth/swaggers/externalapi/models:Err500
 type ExternalAPI interface {
 	// UserRegister ...
 	// @tg http-method=POST
