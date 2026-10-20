@@ -19,7 +19,7 @@ func metricsMiddlewareExternalAPI(next externalapi.ExternalAPI) externalapi.Exte
 	return &metricsExternalAPI{next: next}
 }
 
-func (m metricsExternalAPI) UserRegister(ctx context.Context, email string, password string) (userID uuid.UUID, err error) {
+func (m metricsExternalAPI) UserRegister(ctx context.Context, email string, password string) (err error) {
 
 	defer func(_begin time.Time) {
 		var (
@@ -42,7 +42,7 @@ func (m metricsExternalAPI) UserRegister(ctx context.Context, email string, pass
 	return m.next.UserRegister(ctx, email, password)
 }
 
-func (m metricsExternalAPI) CheckCode(ctx context.Context, userID uuid.UUID, code string) (err error) {
+func (m metricsExternalAPI) CheckCode(ctx context.Context, email string, code string) (userID uuid.UUID, err error) {
 
 	defer func(_begin time.Time) {
 		var (
@@ -62,5 +62,5 @@ func (m metricsExternalAPI) CheckCode(ctx context.Context, userID uuid.UUID, cod
 		RequestLatency.WithLabelValues("externalAPI", "checkCode", strconv.FormatBool(success), strconv.Itoa(errCode)).Observe(time.Since(_begin).Seconds())
 	}(time.Now())
 
-	return m.next.CheckCode(ctx, userID, code)
+	return m.next.CheckCode(ctx, email, code)
 }

@@ -4,14 +4,13 @@ package externalapi
 import (
 	"context"
 
-	customhandlers "github.com/ARM-auto-place/auth/internal/transport/custom_handlers"
+	customhandels "github.com/ARM-auto-place/auth/internal/transport/custom-handels"
 	"github.com/gofiber/fiber/v2"
-	uuid "github.com/google/uuid"
 )
 
 func (http *httpExternalAPI) userRegister(ctx context.Context, request requestExternalAPIUserRegister) (response responseExternalAPIUserRegister, err error) {
 
-	response.UserID, err = http.svc.UserRegister(ctx, request.Email, request.Password)
+	err = http.svc.UserRegister(ctx, request.Email, request.Password)
 	if err != nil {
 		if http.errorHandler != nil {
 			err = http.errorHandler(err)
@@ -34,11 +33,11 @@ func (http *httpExternalAPI) serveUserRegister(ctx *fiber.Ctx) (err error) {
 		request.Password = password
 	}
 
-	return customhandlers.GetPayments(ctx, http.svc, request.Email, request.Password)
+	return customhandels.UserRegister(ctx, http.svc, request.Email, request.Password)
 }
 func (http *httpExternalAPI) checkCode(ctx context.Context, request requestExternalAPICheckCode) (response responseExternalAPICheckCode, err error) {
 
-	err = http.svc.CheckCode(ctx, request.UserID, request.Code)
+	response.UserID, err = http.svc.CheckCode(ctx, request.Email, request.Code)
 	if err != nil {
 		if http.errorHandler != nil {
 			err = http.errorHandler(err)
@@ -49,6 +48,11 @@ func (http *httpExternalAPI) checkCode(ctx context.Context, request requestExter
 func (http *httpExternalAPI) serveCheckCode(ctx *fiber.Ctx) (err error) {
 
 	var request requestExternalAPICheckCode
+	if err = ctx.BodyParser(&request); err != nil {
+		ctx.Response().SetStatusCode(fiber.StatusBadRequest)
+		_, err = ctx.WriteString("request body could not be decoded: " + err.Error())
+		return
+	}
 
 	if _code := ctx.Query("code"); _code != "" {
 		var code string
@@ -56,11 +60,5 @@ func (http *httpExternalAPI) serveCheckCode(ctx *fiber.Ctx) (err error) {
 		request.Code = code
 	}
 
-	if _userID := ctx.Cookies("x-user-id"); _userID != "" {
-		var userID uuid.UUID
-		userID, _ = uuid.Parse(_userID)
-		request.UserID = userID
-	}
-
-	return customhandlers.CheckCode(ctx, http.svc, request.UserID, request.Code)
+	return customhandels.CheckCode(ctx, http.svc, request.Email, request.Code)
 }

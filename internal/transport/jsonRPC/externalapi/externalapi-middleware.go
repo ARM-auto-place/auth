@@ -8,8 +8,8 @@ import (
 	"github.com/google/uuid"
 )
 
-type ExternalAPIUserRegister func(ctx context.Context, email string, password string) (userID uuid.UUID, err error)
-type ExternalAPICheckCode func(ctx context.Context, userID uuid.UUID, code string) (err error)
+type ExternalAPIUserRegister func(ctx context.Context, email string, password string) (err error)
+type ExternalAPICheckCode func(ctx context.Context, email string, code string) (userID uuid.UUID, err error)
 
 type MiddlewareExternalAPI func(next externalapi.ExternalAPI) externalapi.ExternalAPI
 

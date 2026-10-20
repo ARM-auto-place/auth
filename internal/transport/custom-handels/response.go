@@ -1,4 +1,4 @@
-package customhandlers
+package custom_handlers
 
 import (
 	"encoding/json"

@@ -1,7 +1,13 @@
 package postgres
 
-import "github.com/google/uuid"
+import (
+	"context"
+
+	"github.com/ARM-auto-place/auth/internal/models"
+	"github.com/google/uuid"
+)
 
 type AuthStorage interface {
-	UserRegister(email, password string) (userID uuid.UUID, code string, err error)
+	UserRegister(ctx context.Context, email, password string) (userID uuid.UUID, err error)
+	GetUserByEmail(ctx context.Context, email string) (*models.UserProfile, error)
 }

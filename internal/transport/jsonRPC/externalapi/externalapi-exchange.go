@@ -8,14 +8,14 @@ type requestExternalAPIUserRegister struct {
 	Password string `json:"password,omitempty"`
 }
 
-type responseExternalAPIUserRegister struct {
-	UserID uuid.UUID `json:"userID,omitempty"`
-}
+// Formal exchange type, please do not delete.
+type responseExternalAPIUserRegister struct{}
 
 type requestExternalAPICheckCode struct {
-	UserID uuid.UUID `json:"userID,omitempty"`
-	Code   string    `json:"code,omitempty"`
+	Email string `json:"email,omitempty"`
+	Code  string `json:"code,omitempty"`
 }
 
-// Formal exchange type, please do not delete.
-type responseExternalAPICheckCode struct{}
+type responseExternalAPICheckCode struct {
+	UserID uuid.UUID `json:"userID,omitempty"`
+}

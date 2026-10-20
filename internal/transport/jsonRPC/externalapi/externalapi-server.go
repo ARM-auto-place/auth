@@ -37,12 +37,12 @@ func (srv *serverExternalAPI) Wrap(m MiddlewareExternalAPI) {
 	srv.checkCode = srv.svc.CheckCode
 }
 
-func (srv *serverExternalAPI) UserRegister(ctx context.Context, email string, password string) (userID uuid.UUID, err error) {
+func (srv *serverExternalAPI) UserRegister(ctx context.Context, email string, password string) (err error) {
 	return srv.userRegister(ctx, email, password)
 }
 
-func (srv *serverExternalAPI) CheckCode(ctx context.Context, userID uuid.UUID, code string) (err error) {
-	return srv.checkCode(ctx, userID, code)
+func (srv *serverExternalAPI) CheckCode(ctx context.Context, email string, code string) (userID uuid.UUID, err error) {
+	return srv.checkCode(ctx, email, code)
 }
 
 func (srv *serverExternalAPI) WrapUserRegister(m MiddlewareExternalAPIUserRegister) {

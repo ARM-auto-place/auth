@@ -22,7 +22,7 @@ func loggerMiddlewareExternalAPI() MiddlewareExternalAPI {
 	}
 }
 
-func (m loggerExternalAPI) UserRegister(ctx context.Context, email string, password string) (userID uuid.UUID, err error) {
+func (m loggerExternalAPI) UserRegister(ctx context.Context, email string, password string) (err error) {
 	logger := log.Ctx(ctx).With().Str("service", "ExternalAPI").Str("method", "userRegister").Logger()
 	defer func(_begin time.Time) {
 		logHandle := func(ev *zerolog.Event) {
@@ -32,7 +32,7 @@ func (m loggerExternalAPI) UserRegister(ctx context.Context, email string, passw
 					Email:    email,
 					Password: password,
 				}),
-				"response": viewer.Sprintf("%+v", responseExternalAPIUserRegister{UserID: userID}),
+				"response": viewer.Sprintf("%+v", responseExternalAPIUserRegister{}),
 			}
 			ev.Fields(fields).Str("took", time.Since(_begin).String())
 		}
@@ -45,17 +45,17 @@ func (m loggerExternalAPI) UserRegister(ctx context.Context, email string, passw
 	return m.next.UserRegister(ctx, email, password)
 }
 
-func (m loggerExternalAPI) CheckCode(ctx context.Context, userID uuid.UUID, code string) (err error) {
+func (m loggerExternalAPI) CheckCode(ctx context.Context, email string, code string) (userID uuid.UUID, err error) {
 	logger := log.Ctx(ctx).With().Str("service", "ExternalAPI").Str("method", "checkCode").Logger()
 	defer func(_begin time.Time) {
 		logHandle := func(ev *zerolog.Event) {
 			fields := map[string]interface{}{
 				"method": "externalAPI.checkCode",
 				"request": viewer.Sprintf("%+v", requestExternalAPICheckCode{
-					Code:   code,
-					UserID: userID,
+					Code:  code,
+					Email: email,
 				}),
-				"response": viewer.Sprintf("%+v", responseExternalAPICheckCode{}),
+				"response": viewer.Sprintf("%+v", responseExternalAPICheckCode{UserID: userID}),
 			}
 			ev.Fields(fields).Str("took", time.Since(_begin).String())
 		}
@@ -65,5 +65,5 @@ func (m loggerExternalAPI) CheckCode(ctx context.Context, userID uuid.UUID, code
 		}
 		logger.Info().Func(logHandle).Msg("call checkCode")
 	}(time.Now())
-	return m.next.CheckCode(ctx, userID, code)
+	return m.next.CheckCode(ctx, email, code)
 }
