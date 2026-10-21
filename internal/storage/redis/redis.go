@@ -13,7 +13,9 @@ import (
 )
 
 const (
-	timeout = 5 * time.Second
+	timeout             = 5 * time.Second
+	verificationCodeTTL = 10 * time.Minute
+	renewCodeLimitTTL   = 60 * time.Second
 )
 
 type CacheAuth struct {
@@ -36,7 +38,7 @@ func New(logger zerolog.Logger, client redis.UniversalClient) (*CacheAuth, error
 }
 func (r *CacheAuth) SaveVerificationCode(ctx context.Context, email string, password string, code string) error {
 	value := fmt.Sprintf("%s,%s", code, password)
-	err := r.client.Set(ctx, verificationCodeKey(email), value, timeout).Err()
+	err := r.client.Set(ctx, verificationCodeKey(email), value, verificationCodeTTL).Err()
 	if err != nil {
 		r.logger.Err(err).Msgf("failed to save verification code:%s", email)
 		return err
@@ -53,7 +55,10 @@ func (r *CacheAuth) GetVerificationCode(ctx context.Context, email string) (stri
 		r.logger.Err(err).Msgf("failed to get verification code:%s", email)
 		return "", "", err
 	}
-	res := strings.Split(val, ",")
+	res := strings.SplitN(val, ",", 2)
+	if len(res) != 2 {
+		return "", "", fmt.Errorf("invalid verification code data format")
+	}
 	return res[0], res[1], nil
 }
 
@@ -67,6 +72,19 @@ func (r *CacheAuth) DeleteVerificationCode(ctx context.Context, email string) er
 	return nil
 }
 
+func (r *CacheAuth) TryAcquireRenewCodeLimit(ctx context.Context, email string) (bool, error) {
+	return r.client.SetNX(
+		ctx,
+		renewCodeLimitKey(email),
+		"1",
+		renewCodeLimitTTL,
+	).Result()
+}
+
 func verificationCodeKey(email string) string {
 	return "verify_code:" + email
+}
+
+func renewCodeLimitKey(email string) string {
+	return "renew_code_limit" + email
 }

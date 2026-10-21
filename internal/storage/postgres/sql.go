@@ -9,3 +9,6 @@ var sqlInsertUser string
 
 //go:embed sql/select_user_by_email.sql
 var sqlSelectUserByEmail string
+
+//go:embed sql/select_user_credentials_by_email.sql
+var sqlSelectUserCredentialsByEmail string

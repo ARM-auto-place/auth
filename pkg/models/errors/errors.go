@@ -167,6 +167,12 @@ var (
 	ErrFailedSendVerificationCode = func() *Error {
 		return New("failed to send verification code", fasthttp.StatusInternalServerError)
 	}
+	ErrInvalidCredentials = func() *Error {
+		return New("invalid credentials", fasthttp.StatusUnauthorized)
+	}
+	ErrTooManyRequests = func() *Error {
+		return New("too many requests", fasthttp.StatusTooManyRequests)
+	}
 )
 
 func GetWrappedErrorForConfig(err error, paramName, via string) error {

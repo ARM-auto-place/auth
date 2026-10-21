@@ -48,9 +48,20 @@ type ExternalAPI interface {
 	// @tg summary=`Проверка кода верефикации`
 	// @tg desc=`Проверка кода верефикации`
 	CheckCode(ctx context.Context, email string, code string) (userID uuid.UUID, err error)
-
-	// TODO: arm-3 this task 3
-	// RenewVerefyCode(ctx context.Context, userID uuid.UUID)(err error)
-	// Login(ctx context.Context, email string, password string)(userID uuid.UUID,err error)
-	// TODO: Next step: change password,change email
+	// RenewVerifyCode ...
+	// @tg http-method=POST
+	// @tg http-path=/v1/renewCode
+	// @tg http-args=email|email
+	// @tg http-response=github.com/ARM-auto-place/auth/internal/transport/custom-handels:RenewVerifyCode
+	// @tg summary=`Повторная отправка кода подтверждения`
+	RenewVerifyCode(ctx context.Context, email string) (err error)
+	// Login ...
+	// @tg http-method=POST
+	// @tg http-path=/v1/login
+	// @tg http-args=email|email
+	// @tg http-args=password|password
+	// @tg uuidPackage=github.com/google/uuid
+	// @tg http-response=github.com/ARM-auto-place/auth/internal/transport/custom-handels:Login
+	// @tg summary=`Вход пользователя`
+	Login(ctx context.Context, email string, password string) (userID uuid.UUID, err error)
 }
