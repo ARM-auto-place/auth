@@ -80,3 +80,68 @@ func NewAuthService(logger zerolog.Logger, storage postgres.AuthStorage, notific
 		logger:       logger,
 	}
 }
+
+func (a *authService) RenewVerifyCode(ctx context.Context, email string) error {
+	_, password, err := a.redisStorage.GetVerificationCode(ctx, email)
+	if err != nil {
+		if errors.Is(err, commonErrors.ErrCodeExpiredOrNotFound) {
+			return customErrors.ErrVerificationCodeNotFound()
+		}
+		return customErrors.InternalServerError().WithWrapped(
+			err,
+			"failed to get verification code",
+		)
+	}
+
+	allowed, err := a.redisStorage.TryAcquireRenewCodeLimit(ctx, email)
+	if err != nil {
+		return customErrors.InternalServerError()
+	}
+
+	if !allowed {
+		return customErrors.ErrTooManyRequests()
+	}
+
+	code, err := generateVerificationCode()
+	if err != nil {
+		return customErrors.InternalServerError().WithWrapped(
+			err,
+			"failed to generate verification code",
+		)
+	}
+
+	if err := a.redisStorage.SaveVerificationCode(ctx, email, password, code); err != nil {
+		return customErrors.InternalServerError().WithWrapped(
+			err,
+			"failed to save verification code",
+		)
+	}
+	if err := a.notification.SendEmailCode(ctx, email, code); err != nil {
+		return customErrors.ErrFailedSendVerificationCode().WithWrapped(
+			err,
+			"failed to send email",
+		)
+	}
+
+	return nil
+}
+
+func (a *authService) Login(ctx context.Context, email, password string) (uuid.UUID, error) {
+	user, err := a.storage.GetUserCredentialsByEmail(ctx, email)
+	if err != nil {
+		return uuid.Nil, customErrors.InternalServerError().WithWrapped(
+			err,
+			"failed to get user credentials",
+		)
+	}
+
+	if user == nil {
+		return uuid.Nil, customErrors.ErrInvalidCredentials()
+	}
+
+	if !checkPassword(password, user.HashPassword) {
+		return uuid.Nil, customErrors.ErrInvalidCredentials()
+	}
+
+	return user.UserID, nil
+}

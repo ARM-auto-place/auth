@@ -53,3 +53,23 @@ func (s *storage) GetUserByEmail(ctx context.Context, email string) (*models.Use
 	}
 	return &user, nil
 }
+
+func (s *storage) GetUserCredentialsByEmail(ctx context.Context, email string) (*models.UserCredentials, error) {
+	replicaConn := s.connectManager.GetReplicaConn()
+	ctx, cancel := context.WithTimeout(ctx, defaultTimeout)
+	defer cancel()
+	var user models.UserCredentials
+	err := replicaConn.QueryRow(ctx, sqlSelectUserCredentialsByEmail, email).Scan(
+		&user.UserID,
+		&user.Email,
+		&user.HashPassword,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+
+		return nil, fmt.Errorf("GetUserCredentialsByEmail: postgresql: %w", err)
+	}
+	return &user, nil
+}

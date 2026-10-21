@@ -25,3 +25,43 @@ func CheckCode(ctx *fiber.Ctx, svc interfaces.ExternalAPI, email string, code st
 		return svc.CheckCode(ctx.UserContext(), email, code)
 	})
 }
+func RenewVerifyCode(
+	ctx *fiber.Ctx,
+	svc interfaces.ExternalAPI,
+	email string,
+) error {
+	return HandelResponse(
+		ctx,
+		"POST",
+		"/api/auth/v1/renewCode",
+		"RenewVerifyCode",
+		authAPIServiceName,
+		map[string]interface{}{
+			"email": email,
+		},
+		func() (interface{}, error) {
+			return nil, svc.RenewVerifyCode(ctx.UserContext(), email)
+		},
+	)
+}
+
+func Login(
+	ctx *fiber.Ctx,
+	svc interfaces.ExternalAPI,
+	email string,
+	password string,
+) error {
+	return HandelResponse(
+		ctx,
+		"POST",
+		"/api/auth/v1/login",
+		"Login",
+		authAPIServiceName,
+		map[string]interface{}{
+			"email": email,
+		},
+		func() (interface{}, error) {
+			return svc.Login(ctx.UserContext(), email, password)
+		},
+	)
+}
