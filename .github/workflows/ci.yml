@@ -17,6 +17,7 @@ on:
 permissions:
   contents: read
 
+
 jobs:
   go-ci:
     uses: ARM-auto-place/arm-auto-place/.github/workflows/go-ci.yml@v1
