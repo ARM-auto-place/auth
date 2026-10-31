@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   go-ci:
-    uses: ARM-auto-place/arm-auto-place/.github/workflows/go-ci.yml@v1
+    uses: ARM-auto-place/arm-auto-place/.github/workflows/go-ci.yml@master
     with:
       go-version: "1.26"
   
